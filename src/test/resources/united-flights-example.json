@@ -1,0 +1,26 @@
+{
+"flights":
+[
+    {
+      "airlineName": "United",
+      "price": 199,
+      "departureDate": "May 21, 2016",
+      "planeType": "Boeing 737",
+      "origin": "LAX",
+      "code": "ER38sd",
+      "emptySeats": 0,
+      "destination": "SFO"
+    },
+    {
+      "airlineName": "Delta",
+      "price": 450,
+      "departureDate": "June 1, 2016",
+      "planeType": "Boeing 747",
+      "origin": "PDX",
+      "code": "ER0945",
+      "emptySeats": 24,
+      "destination": "CLE"
+    }
+]
+
+}
