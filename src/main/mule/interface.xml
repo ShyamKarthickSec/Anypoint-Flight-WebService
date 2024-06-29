@@ -121,37 +121,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\flights:mua-flights-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    airline: "United",
-    flightCode: "ER38sd",
-    fromAirportCode: "LAX",
-    toAirportCode: "SFO",
-    departureDate: "May 21, 2016",
-    emptySeats: 0,
-    totalSeats: 200,
-    price: 199,
-    planeType: "Boeing 737"
-  }, 
-  {
-    airline: "Delta",
-    flightCode: "ER0945",
-    fromAirportCode: "PDX",
-    toAirportCode: "CLE",
-    departureDate: "June 1, 2016",
-    emptySeats: 24,
-    totalSeats: 350,
-    price: 450,
-    planeType: "Boeing 747"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="getFlights" doc:id="afbff0f2-054f-4088-850c-8553d0313b5d" name="getFlights"/>
     </flow>
     <flow name="post:\flights:application\json:mua-flights-api-config">
         <ee:transform doc:name="Transform Message">
