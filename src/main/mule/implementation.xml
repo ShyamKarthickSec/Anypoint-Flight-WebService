@@ -210,4 +210,60 @@ payload.flights map ( flight , indexOfFlight ) -> {
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="c551d735-6fe1-49d3-9bf1-9e82339da7e0" />
 	</flow>
+	<flow name="postFlight" doc:id="f973399b-f532-4550-8929-18e007af5d05" >
+		<ee:transform doc:name="Transform Message" doc:id="80e085bf-7a5e-4151-8904-7b045d95dea6" >
+			<ee:message >
+				<ee:set-payload resource="json_flight_playground.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="DWoutput" ><![CDATA[%dw 2.0
+output application/xml
+---
+data: {
+	hub: "MUA",
+	flight @(airline: payload.airline):{
+	code: payload.toAirportCode
+}
+}
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="be117230-50ed-4ca6-8c7c-5d27868685a0" />
+	</flow>
+	<flow name="postMultipleFlights" doc:id="cd644f60-0da1-4b0c-bb5e-e582c20d474a" >
+		<http:listener doc:name="Listener" doc:id="ff91ca44-521e-4653-a8e6-dbdac1451072" config-ref="HTTP_Listener_config" path="multipleflights" allowedMethods="POST"/>
+		<ee:transform doc:name="Transform Message" doc:id="7552a18d-7b56-485c-999d-8dbc7d1ef72e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+type currency = String {format : "###.00"}
+type Flight = Object {class: "com.mulesoft.training.flight"}
+//var numSeats = 400
+//var numSeats = (x=400) -> x
+/*var numSeats = (planeType :  String)->
+	if(planeType contains('737'))
+		150
+	else
+		300*/
+fun getNumSeats( planeType: String)= do{
+	if(planeType contains('737'))
+		150
+	else
+		300
+}
+---
+flights: payload..*return map(object,index)  ->  {
+			destination: object.destination,
+			price: object.price as Number as currency,
+			//totalSeats: getNumSeats(object.planeType as String),
+			planeType: upper(object.planeType as String),
+			departureDate: object.departureDate as Date {format: "yyyy/MM/dd"} as String {format: "MMM dd, yyyy"}
+			
+		} as Flight
+	
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="71f300ca-9765-42fb-8cc3-88882d23471c" />
+	</flow>
 </mule>
